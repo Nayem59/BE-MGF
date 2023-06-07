@@ -1,8 +1,8 @@
 const db = require("./connection");
 const format = require("pg-format");
-const { users, companies } = require("./data");
+const { contacts, companies } = require("./data");
 
-const seed = (users, companies) => {
+const seed = (contacts, companies) => {
   return db
     .query(`DROP TABLE IF EXISTS contacts;`)
     .then(() => {
@@ -38,11 +38,11 @@ const seed = (users, companies) => {
     .then(() => {
       const insertUsersData = format(
         "INSERT INTO contacts (firstname, lastname, email, company_id) VALUES %L RETURNING *",
-        users.map((user) => [
-          user.firstname,
-          user.lastname,
-          user.email,
-          user.company.id,
+        contacts.map((contact) => [
+          contact.firstname,
+          contact.lastname,
+          contact.email,
+          contact.company.id,
         ])
       );
       return db.query(insertUsersData);
@@ -52,6 +52,6 @@ const seed = (users, companies) => {
     });
 };
 
-seed(users, companies).then(() => {
+seed(contacts, companies).then(() => {
   db.end();
 });

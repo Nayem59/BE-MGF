@@ -1,10 +1,13 @@
 const express = require("express");
 const app = express();
-
 app.use(express.json());
 
-app.get("/api/msg", (req, res) => {
-  res.status(200).send({ msg: "api is working" });
-});
+const {
+  getContacts,
+  postContact,
+} = require("./controllers/contacts-controllers");
+
+app.get("/api/contacts", getContacts);
+app.post("/api/contacts", postContact);
 
 module.exports = app;
