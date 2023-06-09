@@ -1,4 +1,9 @@
-const { fetchContacts, addContact } = require("../models/contacts-models");
+const {
+  fetchContacts,
+  addContact,
+  updateContact,
+  fetchAreaContacts,
+} = require("../models/contacts-models");
 
 exports.getContacts = (req, res, next) => {
   fetchContacts()
@@ -16,6 +21,29 @@ exports.postContact = (req, res, next) => {
   addContact(newContact)
     .then((contact) => {
       res.status(201).send({ contact });
+    })
+    .catch((err) => {
+      next(err);
+    });
+};
+
+exports.patchContact = (req, res, next) => {
+  const { contacts_id } = req.params;
+  const newContact = req.body;
+
+  updateContact(contacts_id, newContact)
+    .then((contact) => {
+      res.status(200).send({ contact });
+    })
+    .catch((err) => {
+      next(err);
+    });
+};
+
+exports.getAreaContacts = (req, res, next) => {
+  fetchAreaContacts()
+    .then((companies) => {
+      res.status(200).send({ companies });
     })
     .catch((err) => {
       next(err);
