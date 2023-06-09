@@ -1,5 +1,6 @@
 const {
   fetchContacts,
+  fetchContact,
   addContact,
   updateContact,
   fetchAreaContacts,
@@ -9,6 +10,18 @@ exports.getContacts = (req, res, next) => {
   fetchContacts()
     .then((contacts) => {
       res.status(200).send({ contacts });
+    })
+    .catch((err) => {
+      next(err);
+    });
+};
+
+exports.getContact = (req, res, next) => {
+  const { contacts_id } = req.params;
+
+  fetchContact(contacts_id)
+    .then((contact) => {
+      res.status(200).send({ contact });
     })
     .catch((err) => {
       next(err);

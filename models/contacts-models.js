@@ -14,8 +14,31 @@ exports.fetchContacts = () => {
   FROM contacts
   JOIN companies ON contacts.company_id = companies.company_id
   ORDER BY contacts.contact_id ASC;`;
+
   return db.query(queryStr).then((result) => {
     return result.rows;
+  });
+};
+
+exports.fetchContact = (contacts_id) => {
+  const queryParams = [contacts_id];
+  let queryStr = `SELECT
+  contacts.contact_id,
+  contacts.firstname,
+  contacts.lastname,
+  contacts.email,
+  JSON_BUILD_OBJECT(
+      'id', companies.company_id,
+      'name', companies.name,
+      'postcode', companies.postcode
+  ) AS company
+  FROM contacts
+  JOIN companies ON contacts.company_id = companies.company_id
+  WHERE contact_id = $1
+  ORDER BY contacts.contact_id ASC;`;
+
+  return db.query(queryStr, queryParams).then((result) => {
+    return result.rows[0];
   });
 };
 
@@ -66,6 +89,7 @@ exports.fetchAreaContacts = () => {
   JOIN companies ON contacts.company_id = companies.company_id
   GROUP BY contacts.company_id, companies.name, companies.postcode
   ORDER BY company_id ASC;`;
+
   return db.query(queryStr).then((result) => {
     return result.rows;
   });
